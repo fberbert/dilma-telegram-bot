@@ -21,31 +21,19 @@ import logging
 #módulo de emojis
 from emoji import emojize 
 
-#módulo de expressões regulares
+#expressões regulares
 import re
-
-#módulos do phantomjs
-from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-
-#módulo para tratar imagem
-from PIL import Image
-
-#módulo para checar se arquivo existe
-import os.path
-
-#módulos de data e hora
-#import time
-#import datetime
-
-#-------------------------------------------------------------
 
 #-------------------------------------------------------------
 # criando o updater e dispatcher para o BOT
 #-------------------------------------------------------------
-updater = Updater(token="719504886:AAHzJ4TdB51DgLwzxExc7ws8jtS0j5PDUQ4")
+mytoken = ''
+try:
+    from local_settings import *
+except:
+    pass
+
+updater = Updater(token=mytoken)
 job = updater.job_queue
 dispatcher = updater.dispatcher
 
@@ -74,7 +62,7 @@ Under construction...
 
 --
 
-<i>Telegram Bot Abelão
+<i>Telegram Bot - Dilma Intelectual
 Criado por Fábio Berbert de Paula ( @vivaolinux )
 Powered by Python 3.x</i>
 """
@@ -82,22 +70,21 @@ Powered by Python 3.x</i>
     bot.send_message(chat_id=update.message.chat_id, parse_mode="HTML", text=html)
 
 
-
 def quote():
     """
-    Envia uma frase de efeito do Abel
+    Envia uma frase de efeito da Dilma
     """
 
     #importar classe Quotes, arquivo com todas as frases do Yoda
     from Quotes import Quotes
-    quotes = Quotes()
+    #quotes = Quotes()
 
-    return quotes.quote()
+    return Quotes().quote()
 
 
 def echo (bot, update):
     """
-    Recursos de iteração do Yoda nos canais de chat
+    Recursos de iteração da Dilma nos canais de chat
     """
 
 
@@ -116,64 +103,30 @@ def echo (bot, update):
         pass
 
 
-    #bot.send_message(chat_id=chat_id, text="test: " + name)
-
     try:
 
         msg = update.message.text.upper()
 
-        if "ABEL" in msg:
+        if "DILMA" in msg:
             bot.send_message(chat_id=chat_id, text=quote())
 
         regjoy = [ re.compile("KKK"), re.compile("HAHAHA"), re.compile("HUAHUA") ]
         if any(regex.search(msg) for regex in regjoy):
             out = emojize(":joy::joy::joy:", use_aliases=True)
-            #bot.send_message(chat_id=chat_id, text=out)
+            bot.send_message(chat_id=chat_id, text=out)
 
         regrage = [ re.compile("PQP"), re.compile("CARALHO"), re.compile("VTNC"), re.compile("MERDA") ]
         if any(regex.search(msg) for regex in regrage):
             out = emojize(":rage:", use_aliases=True)
             bot.send_message(chat_id=chat_id, text=out)
 
-        regrage = [ re.compile("Gum"), re.compile("GUM") ]
-        if any(regex.search(msg) for regex in regrage):
-            out = "Gum é um zagueiro extraordinário, um dos melhores que vi jogar!"
-            bot.send_message(chat_id=chat_id, text=out)
-
-        regrage = [ re.compile("Pedro"), re.compile("pedro") ]
-        if any(regex.search(msg) for regex in regrage):
-            out = "Sempre falei que Pedro era melhor que 90% dos atacantes do Brasil"
-            bot.send_message(chat_id=chat_id, text=out)
-
-        regrage = [ re.compile("MJ") ]
-        if any(regex.search(msg) for regex in regrage):
-            out = "Marco Junior, que jogadoraço, que raça! Tenho orgulho desse ser humano"
-            bot.send_message(chat_id=chat_id, text=out)
-
-        regrage = [ re.compile("JC") ]
-        if any(regex.search(msg) for regex in regrage):
-            out = "JC, que goleiro! Estamos muito bem servidos na posição"
-            bot.send_message(chat_id=chat_id, text=out)
-
-
         regcoffee = [ re.compile("CAFÉ"), re.compile("CAFE") ]
         if any(regex.search(msg) for regex in regcoffee):
             out = emojize(":coffee::coffee::coffee:", use_aliases=True)
             bot.send_message(chat_id=chat_id, text=out)
 
-        regpump = [ re.compile("ALTA"), re.compile("PUMP") ]
-        if any(regex.search(msg) for regex in regpump):
-            out = emojize(":moneybag::moneybag::moneybag:", use_aliases=True)
-            #bot.send_message(chat_id=chat_id, text=out)
     except:
         pass
-
-
-    #verificar se o usuário possui username configurado
-    #if not username:
-        ##output = name + ": por favor, configure um username no Telegram!"
-        #output = "Por favor " + name + ", configure um username no Telegram!\n\nNo aplicativo, clique em <strong>Configurações > Nome de usuário</strong>. Basta escolher um nome de sua preferência, ele será seu ID no Telegram, usado para entrarmos em contato contigo sem a necessidade de saber seu número de telefone."
-        #bot.send_message(chat_id=chat_id, parse_mode='HTML', text=output)
 
 
 def chatid(bot, update):
@@ -183,29 +136,24 @@ def chatid(bot, update):
 
     bot.send_message(chat_id=update.message.chat_id, text=update.message.chat_id)
 
-def repeat(bot, update):
+def calc(bot, update):
     """
-    Repetir o que você escreveu
+    Retorna o resultado da equação
     """
+    formula = update.message.text[6:]
+    resp = eval(formula)
 
-    output = update.message.text[8:]
-    bot.send_message(chat_id=update.message.chat_id, parse_mode='HTML', text=output)
-
-import random, string
-
-def randomword(length):
-    """
-    Retorna uma palavra aleatória com <length> de tamanho
-    """
-
-    letters = string.ascii_lowercase
-    return ''.join(random.choice(letters) for i in range(length))
+    resp = "Com minha precisão absoluta, lhes digo que " + formula + " equivale a:\n\n" + str(resp)
+    bot.send_message(chat_id=update.message.chat_id, parse_mode='HTML', text=resp)
 
 #main block start
 #
 #
 
 chatid_handler = CommandHandler('chatid', chatid)
+dispatcher.add_handler(chatid_handler)
+
+chatid_handler = CommandHandler('calc', calc)
 dispatcher.add_handler(chatid_handler)
 
 help_handler = CommandHandler('help', help)
