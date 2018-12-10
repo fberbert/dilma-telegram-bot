@@ -1,6 +1,13 @@
 # dilma-telegram-bot
-<h1>Dilma Intelectual - Telegram Bot</h1>
+<h1>Dilma Intelectual</h1>
 <br/>
+
+<h3>Pré-requisitos</h3>
+
+Instale as dependências com o comando:
+
+<strong>pip install -r requirements.txt</strong>
+<br/><br/>
 
 <h3>Configurando local_settings.py</h3>
 
